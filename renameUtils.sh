@@ -1,3 +1,4 @@
+#!/bin/bash
 numExtract() {
         # want to extract a continous number
         # finds the first number in string and extracts it.
