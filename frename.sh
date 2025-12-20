@@ -1,3 +1,4 @@
+#!/bin/bash
 source ./renameUtils.sh;
 
 #plan
