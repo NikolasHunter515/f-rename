@@ -18,10 +18,9 @@ if [[ "$2" == "-t" ]]; then
         param2="false";
 fi
 
-path="tvshows/sopranos/season 1";
 p1=$(numExtract "$param");
 cd "$param";
 pwd
-echo "working";
+echo "Script starting";
 
 renameAll $p1;
