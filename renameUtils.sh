@@ -22,30 +22,15 @@ numExtract() {
         echo "$result";
 }
 
-extractAfter(){
-        target=$1;
-        n=$((${#target} - 1));
-        i=$n;
-        result="";
-        index=-1;
-
-        while [ $i -ge 0 ]; do
-                value=${target:$i:1};
-                if [[ "$value" == "." ]]; then
-                        index=$i;
-                        result=${target:$((i+1)):n};
-                        break;
-                fi
-                ((i--));
-        done
-
-        echo "$result";
-
-        #goal here is to find the '.' then extract everything after it.
-        #only extract if the file has an extension
-
-        #kind of redundant to search the string twice for the '.', just search is found record the extension type
-        #to ensure we only get the extension and reduce search time read the string backwards.
+extractAfter() {
+    local target="$1"
+    # remove all up to the last dot
+    local ext="${target##*.}"
+    # if no dot was found, ext = full filename → treat as no extension
+    if [[ "$ext" == "$target" ]]; then
+        ext=""
+    fi
+    echo "$ext"
 }
 
 rename_file(){
@@ -56,7 +41,7 @@ rename_file(){
         testFlag=$4;
         newName="";#missing this may have been the issue.
         extension="";#no extension leave as is
-        exten=$(extractAfter $oldName);
+        exten=$(extractAfter "$oldName");
         if [[ ${#exten} -gt 0  ]]; then
                 extension=$exten;
         fi
@@ -74,13 +59,13 @@ rename_file(){
                 epNum="E${epNum}";
         fi
 
-        if [[ ${#exten} -eq 0 ]]; then
+        if [[ ${#extension} -eq 0 ]]; then
                 newName=$oldName;
         else
                 newName="${seasonNum}${epNum}.${extension}";
         fi
 
-        if [[ "$testFlag" == "true" ]] then
+        if [[ "$testFlag" == "true" ]]; then
                 mv -- "$oldName" "$newName";
         fi
 
@@ -99,8 +84,8 @@ renameAll(){
         for f in "${files[@]}"; do
                 #echo "file: $f";
                 #TODO grab num from directory and from file name then rename file.
-                epNum=$(numExtract $f);
-                newNme=$(rename_file $f $dir $epNum $test);
+                epNum=$(numExtract "$f");
+                newNme=$(rename_file "$f" "$dir" "$epNum" "$test");
                 echo "Old: $f, new: $newNme";
         done
 }
