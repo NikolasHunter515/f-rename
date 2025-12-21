@@ -48,11 +48,12 @@ extractAfter(){
         #to ensure we only get the extension and reduce search time read the string backwards.
 }
 
-rename(){
+rename_file(){
         #make more reusable by allowing for naming options like passing in the S and or E
         local oldName=$1;
         seasonNum=$2;
         epNum=$3;
+        testFlag=$4;
         newName="";#missing this may have been the issue.
         extension="";#no extension leave as is
         exten=$(extractAfter $oldName);
@@ -79,14 +80,18 @@ rename(){
                 newName="${seasonNum}${epNum}.${extension}";
         fi
 
+        if [[ "$testFlag" == "true" ]] then
+                mv -- "$oldName" "$newName";
+        fi
+
         echo "$newName";
-        mv -- "$oldName" "$newName";
 }
 
 #will need to extract the episode name from the file before renaming.
 
 renameAll(){
         dir=$1;#is expecting the season number to be passed no the directory.
+        test=$2
         files=( * );
         #seasonNum=$(numExtract $dir); #is almost working.
         echo "season num  $dir";
@@ -95,7 +100,7 @@ renameAll(){
                 #echo "file: $f";
                 #TODO grab num from directory and from file name then rename file.
                 epNum=$(numExtract $f);
-                newNme=$(rename $f $dir $epNum);
+                newNme=$(rename_file $f $dir $epNum $test);
                 echo "Old: $f, new: $newNme";
         done
 }
