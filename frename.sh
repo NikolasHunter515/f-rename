@@ -5,7 +5,7 @@ source ./renameUtils.sh;
 #get season num from path
 #change directory
 #change all files in directory.
-VERSION="1.1.0";
+VERSION="1.1.1";
 param=$1;
 param2="true"; #added a rename safety
 
