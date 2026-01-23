@@ -102,9 +102,11 @@ unsorted_rename(){
         season=$1;
         zero=$2;
         dryRun=$3;
+        files=( * );
         
         minEp=999999;
         bias=1; #1 assumes staring from 1
+
 
         if [[ "$zero" == "true" ]]; then
                 bias=0;
@@ -114,6 +116,7 @@ unsorted_rename(){
         #1.loop to find smallest value while renaming.
         #2.rename based of difference between min value.
 
+        #potential issue skips negative episode if found.
         for f in "${files[@]}"; do
                 epNum=$(numExtract "$f");
                 if [[ $epNum -gt -1 && $epNum -lt $minEp ]]; then
@@ -121,9 +124,11 @@ unsorted_rename(){
                 fi
         done
 
+
         if [[ $minEp -eq 999999 ]]; then
-                exit  0;
+                return  0;
         fi
+
 
         for f in "${files[@]}"; do
                 epNum=$(numExtract "$f");
@@ -133,12 +138,13 @@ unsorted_rename(){
                 echo "Old: $f, new: $newNme";
         done
 
-        exit 0;
+
 }
 
 #will need to extract the episode name from the file before renaming.
 
 renameAll(){
+        #TODO add safe guard to prevent renaming bash scripts.
         dir=$1;#is expecting the season number to be passed no the directory.
         dryRun=$2;
         sorted=$3;#another boolean val is expected.
